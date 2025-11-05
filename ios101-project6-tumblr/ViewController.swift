@@ -6,7 +6,7 @@
 import UIKit
 import NukeExtensions
 
-class ViewController: UIViewController, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
 
@@ -16,6 +16,8 @@ class ViewController: UIViewController, UITableViewDataSource {
         super.viewDidLoad()
 
         tableView.dataSource = self
+        tableView.delegate = self
+
         fetchPosts()
 
     }
@@ -38,6 +40,10 @@ class ViewController: UIViewController, UITableViewDataSource {
 
         return cell
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+
 
     func fetchPosts() {
         let url = URL(string: "https://api.tumblr.com/v2/blog/humansofnewyork/posts/photo?api_key=1zT8CiXGXFcQDyMFG7RtcfGLwTdDjFUJnZzKJaWTmgyK4lKGYk")!
@@ -78,4 +84,18 @@ class ViewController: UIViewController, UITableViewDataSource {
         }
         session.resume()
     }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Use the segue you attached to the cell (name it something clear, e.g. "ShowDetail")
+        guard segue.identifier == "ShowDetail" else { return }
+
+        // Row that was tapped:
+        guard let indexPath = tableView.indexPathForSelectedRow else { return }
+
+        // Unwrap if destination ever gets embedded in a nav controller
+        let dest = (segue.destination as? UINavigationController)?.topViewController ?? segue.destination
+        if let detail = dest as? DetailViewController {
+            detail.post = posts[indexPath.row]
+        }
+    }
+
 }
