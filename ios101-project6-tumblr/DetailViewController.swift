@@ -20,9 +20,6 @@ class DetailViewController: UIViewController {
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
-        captionTextView.text = "TEST — if you can read this, the UI is fine."
-        captionTextView.textColor = .label
-        captionTextView.backgroundColor = .clear
 
         super.viewDidLoad()
 
